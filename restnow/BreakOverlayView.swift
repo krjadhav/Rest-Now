@@ -18,8 +18,8 @@ struct BreakOverlayView: View {
 
                 RadialGradient(
                     gradient: Gradient(colors: [
-                        Color.black.opacity(0.35),
-                        Color.black.opacity(0.90)
+                        Color.black.opacity(0.95),
+                        Color.black.opacity(1.0)
                     ]),
                     center: .center,
                     startRadius: 0,
@@ -33,7 +33,8 @@ struct BreakOverlayView: View {
                     .font(.largeTitle.weight(.bold))
                     .foregroundColor(.white)
 
-                Text("Take a 10 minute break. Gently look away from the screen and relax.")
+                Text("Take a break. Gently look away from the screen and relax.")
+                    .font(.largeTitle.weight(.regular))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white.opacity(0.9))
 

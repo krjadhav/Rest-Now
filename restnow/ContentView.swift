@@ -13,6 +13,10 @@ struct ContentView: View {
     private let workDuration: TimeInterval = 2 * 5
     private let breakDuration: TimeInterval = 1 * 5
 
+    private var overlayAnimation: Animation {
+        .easeInOut(duration: 0.45)
+    }
+
     private enum Phase {
         case work
         case rest
@@ -48,27 +52,32 @@ struct ContentView: View {
             .padding()
 
             if phase == .rest {
-                Color.black.opacity(0.6)
-                    .ignoresSafeArea()
+                ZStack {
+                    Color.black.opacity(0.6)
+                        .ignoresSafeArea()
+                        .transition(.opacity)
 
-                VStack(spacing: 20) {
-                    Text("Rest Now")
-                        .font(.largeTitle.weight(.bold))
-                        .foregroundColor(.white)
+                    VStack(spacing: 20) {
+                        Text("Rest Now")
+                            .font(.largeTitle.weight(.bold))
+                            .foregroundColor(.white)
 
-                    Text("Take a 10 minute break. Gently look away from the screen and relax.")
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.white.opacity(0.9))
+                        Text("Take a 10 minute break. Gently look away from the screen and relax.")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.white.opacity(0.9))
 
-                    Text(formattedTime(remainingSeconds))
-                        .font(.system(size: 44, weight: .medium, design: .monospaced))
-                        .foregroundColor(.white)
+                        Text(formattedTime(remainingSeconds))
+                            .font(.system(size: 44, weight: .medium, design: .monospaced))
+                            .foregroundColor(.white)
 
-                    Button("Skip Break") {
-                        resetToWork()
+                        Button("Skip Break") {
+                            resetToWork()
+                        }
                     }
+                    .padding()
+                    .transition(.opacity.combined(with: .scale(scale: 0.98)))
                 }
-                .padding()
+                .zIndex(1)
             }
         }
         .onAppear {
@@ -90,21 +99,24 @@ struct ContentView: View {
     }
 
     private func switchPhase() {
-        switch phase {
-        case .work:
-            phase = .rest
-            remainingSeconds = breakDuration
-            playBell()
-        case .rest:
-            phase = .work
-            remainingSeconds = workDuration
-            playBell()
+        withAnimation(overlayAnimation) {
+            switch phase {
+            case .work:
+                phase = .rest
+                remainingSeconds = breakDuration
+            case .rest:
+                phase = .work
+                remainingSeconds = workDuration
+            }
         }
+        playBell()
     }
 
     private func resetToWork() {
-        phase = .work
-        remainingSeconds = workDuration
+        withAnimation(overlayAnimation) {
+            phase = .work
+            remainingSeconds = workDuration
+        }
     }
 
     private func togglePhaseManually() {
@@ -112,7 +124,7 @@ struct ContentView: View {
     }
 
     private func playBell() {
-        NSSound(named: NSSound.Name("Submarine"))?.play()
+        NSSound(named: NSSound.Name("Funk"))?.play()
     }
 
     private func formattedTime(_ seconds: TimeInterval) -> String {

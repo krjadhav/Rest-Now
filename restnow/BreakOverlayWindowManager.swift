@@ -6,13 +6,21 @@ final class BreakOverlayWindowManager {
     private let session: RestNowSession
     private var windows: [NSWindow] = []
 
+    private let fadeDuration: TimeInterval = 0.45
+
     init(session: RestNowSession) {
         self.session = session
     }
 
     func show() {
         guard windows.isEmpty else {
-            windows.forEach { $0.orderFrontRegardless() }
+            windows.forEach { window in
+                window.orderFrontRegardless()
+                NSAnimationContext.runAnimationGroup { context in
+                    context.duration = fadeDuration
+                    window.animator().alphaValue = 1
+                }
+            }
             return
         }
 
@@ -36,6 +44,7 @@ final class BreakOverlayWindowManager {
             window.hasShadow = false
             window.level = level
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+            window.alphaValue = 0
 
             let hostingView = NSHostingView(rootView: BreakOverlayView(session: session))
             hostingView.frame = NSRect(origin: .zero, size: frame.size)
@@ -53,11 +62,25 @@ final class BreakOverlayWindowManager {
             } else {
                 window.orderFrontRegardless()
             }
+
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = fadeDuration
+                window.animator().alphaValue = 1
+            }
         }
     }
 
     func hide() {
-        windows.forEach { $0.orderOut(nil) }
+        let windowsToHide = windows
         windows.removeAll()
+
+        windowsToHide.forEach { window in
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = fadeDuration
+                window.animator().alphaValue = 0
+            } completionHandler: {
+                window.orderOut(nil)
+            }
+        }
     }
 }

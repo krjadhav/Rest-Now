@@ -45,6 +45,7 @@ final class RestNowSession: ObservableObject {
     func skipBreak() {
         phase = .work
         remainingSeconds = workDuration
+        playBell()
     }
 
     var menuBarTitle: String {

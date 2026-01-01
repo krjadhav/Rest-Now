@@ -33,7 +33,7 @@ struct BreakOverlayView: View {
                     .font(.largeTitle.weight(.bold))
                     .foregroundColor(.white)
 
-                Text("Take a break. Gently look away from the screen and relax.")
+                Text("Take a break. Stand up. Strech.")
                     .font(.largeTitle.weight(.regular))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.white.opacity(0.9))
@@ -42,9 +42,26 @@ struct BreakOverlayView: View {
                     .font(.system(size: 44, weight: .medium, design: .monospaced))
                     .foregroundColor(.white)
 
-                Button("Skip Break") {
+                Button {
                     session.skipBreak()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "chevron.right.2")
+                            .font(.system(size: 13, weight: .semibold))
+                        Text("Skip Break")
+                            .font(.system(size: 16, weight: .semibold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(Color.gray.opacity(0.35))
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                    )
+                    .clipShape(Capsule())
                 }
+                .buttonStyle(.plain)
             }
             .padding()
         }

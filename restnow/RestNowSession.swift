@@ -13,6 +13,7 @@ final class RestNowSession: ObservableObject {
 
     @Published private(set) var phase: Phase
     @Published private(set) var remainingSeconds: TimeInterval
+    @Published private(set) var isPaused: Bool = false
 
     private var timer: Timer?
 
@@ -48,13 +49,41 @@ final class RestNowSession: ObservableObject {
         playBell()
     }
 
+    func togglePause() {
+        if isPaused {
+            resumeCycle()
+        } else {
+            pauseCycle()
+        }
+    }
+
+    func pauseCycle() {
+        guard !isPaused else { return }
+        isPaused = true
+        timer?.invalidate()
+        timer = nil
+    }
+
+    func resumeCycle() {
+        guard isPaused else { return }
+        isPaused = false
+        startTimer()
+    }
+
     var menuBarTitle: String {
+        let baseTitle: String
         switch phase {
         case .work:
-            return formattedTime(remainingSeconds)
+            baseTitle = formattedTime(remainingSeconds)
         case .rest:
-            return "Break " + formattedTime(remainingSeconds)
+            baseTitle = "Break " + formattedTime(remainingSeconds)
         }
+
+        if isPaused {
+            return "Paused " + baseTitle
+        }
+
+        return baseTitle
     }
 
     private func startTimer() {
@@ -67,6 +96,7 @@ final class RestNowSession: ObservableObject {
     }
 
     private func tick() {
+        guard !isPaused else { return }
         guard remainingSeconds > 0 else {
             switchPhase()
             return

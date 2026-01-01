@@ -62,7 +62,7 @@ struct ContentView: View {
                             .font(.largeTitle.weight(.bold))
                             .foregroundColor(.white)
 
-                        Text("Take a 10 minute break. Gently look away from the screen and relax.")
+                        Text("Take a break. Stand up. Strech.")
                             .multilineTextAlignment(.center)
                             .foregroundColor(.white.opacity(0.9))
 
@@ -70,9 +70,26 @@ struct ContentView: View {
                             .font(.system(size: 44, weight: .medium, design: .monospaced))
                             .foregroundColor(.white)
 
-                        Button("Skip Break") {
+                        Button {
                             resetToWork()
+                        } label: {
+                            HStack(spacing: 3) {
+                                Image(systemName: "chevron.right.2")
+                                    .font(.system(size: 13, weight: .semibold))
+                                Text("Skip Break")
+                                    .font(.system(size: 15, weight: .semibold))
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(Color.gray.opacity(0.35))
+                            .overlay(
+                                Capsule()
+                                    .stroke(Color.white.opacity(0.25), lineWidth: 1)
+                            )
+                            .clipShape(Capsule())
                         }
+                        .buttonStyle(.plain)
                     }
                     .padding()
                     .transition(.opacity.combined(with: .scale(scale: 0.98)))

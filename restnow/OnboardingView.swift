@@ -6,6 +6,7 @@ struct OnboardingView: View {
     private let title: String
     private let subtitle: String
     private let primaryButtonTitle: String
+    private let showsProjectLink: Bool
 
     @State private var selectedWorkSeconds: Int
     @State private var selectedRestSeconds: Int
@@ -18,11 +19,13 @@ struct OnboardingView: View {
         primaryButtonTitle: String = "Start",
         initialWorkSeconds: Int = 30,
         initialRestSeconds: Int = 10,
+        showsProjectLink: Bool = false,
         onCommit: @escaping (_ workDuration: TimeInterval, _ restDuration: TimeInterval) -> Void
     ) {
         self.title = title
         self.subtitle = subtitle
         self.primaryButtonTitle = primaryButtonTitle
+        self.showsProjectLink = showsProjectLink
         self.onCommit = onCommit
         _selectedWorkSeconds = State(initialValue: initialWorkSeconds)
         _selectedRestSeconds = State(initialValue: initialRestSeconds)
@@ -54,6 +57,19 @@ struct OnboardingView: View {
                 .pickerStyle(.segmented)
             }
 
+            if showsProjectLink {
+                HStack(spacing: 0) {
+                    Text("Rest Now is made by Kausthub Jadhav. Feel free to contribute ")
+
+                    if let url = URL(string: "https://github.com/krjadhav/Rest-Now") {
+                        Link("here.", destination: url)
+                            .foregroundStyle(.blue)
+                    }
+                }
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
             HStack {
                 Spacer()
 
@@ -64,6 +80,8 @@ struct OnboardingView: View {
             }
         }
         .padding(20)
+        .padding(.top, 8)
         .frame(width: 460)
+        .background(.regularMaterial.opacity(0.99))
     }
 }

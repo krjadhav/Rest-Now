@@ -15,6 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var startBreakItem: NSMenuItem?
     private var skipBreakItem: NSMenuItem?
+    private var pauseCycleItem: NSMenuItem?
     private var resetItem: NSMenuItem?
 
     private var cancellables = Set<AnyCancellable>()
@@ -45,6 +46,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         session?.resetCycle()
     }
 
+    @objc private func togglePauseCycle() {
+        session?.togglePause()
+    }
+
     @objc private func openSettings() {
         showSettings()
     }
@@ -73,9 +78,35 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             statusItem = item
         }
 
+        if let button = item.button {
+            let symbolConfig = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
+            let image = (
+                NSImage(systemSymbolName: "eye.half.closed.fill", accessibilityDescription: "Rest Now") ??
+                NSImage(systemSymbolName: "eye.fill", accessibilityDescription: "Rest Now") ??
+                NSImage(systemSymbolName: "eye", accessibilityDescription: "Rest Now")
+            )?
+                .withSymbolConfiguration(symbolConfig)
+            image?.isTemplate = true
+            button.image = image
+            button.imagePosition = .imageLeft
+            button.imageScaling = .scaleProportionallyDown
+        }
+
         item.button?.title = session.menuBarTitle
 
         let menu = NSMenu()
+
+        let pauseCycle = NSMenuItem(title: "Pause Cycle", action: #selector(togglePauseCycle), keyEquivalent: "p")
+        pauseCycle.target = self
+        menu.addItem(pauseCycle)
+        self.pauseCycleItem = pauseCycle
+
+        let reset = NSMenuItem(title: "Reset Cycle", action: #selector(resetCycle), keyEquivalent: "r")
+        reset.target = self
+        menu.addItem(reset)
+        self.resetItem = reset
+
+        menu.addItem(.separator())
 
         let startBreak = NSMenuItem(title: "Start Break Now", action: #selector(startBreakNow), keyEquivalent: "b")
         startBreak.target = self
@@ -89,13 +120,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
 
-        let reset = NSMenuItem(title: "Reset Cycle", action: #selector(resetCycle), keyEquivalent: "r")
-        reset.target = self
-        menu.addItem(reset)
-        self.resetItem = reset
-
-        menu.addItem(.separator())
-
         let settings = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
         settings.target = self
         menu.addItem(settings)
@@ -106,11 +130,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         item.menu = menu
 
-        Publishers.CombineLatest(session.$phase, session.$remainingSeconds)
+        Publishers.CombineLatest3(session.$phase, session.$remainingSeconds, session.$isPaused)
             .receive(on: RunLoop.main)
-            .sink { [weak self] phase, _ in
+            .sink { [weak self] phase, _, isPaused in
                 guard let self else { return }
                 self.statusItem?.button?.title = session.menuBarTitle
+                self.pauseCycleItem?.title = isPaused ? "Resume Cycle" : "Pause Cycle"
 
                 switch phase {
                 case .work:
@@ -131,7 +156,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func showOnboarding() {
         let hostingView = NSHostingView(
             rootView: OnboardingView(
-                title: "Rest Now",
+                title: "RestNow",
                 subtitle: "Choose your work and rest durations.",
                 primaryButtonTitle: "Start",
                 initialWorkSeconds: 30,
@@ -157,6 +182,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         window.title = "Rest Now"
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        window.styleMask.insert(.fullSizeContentView)
+        window.isMovableByWindowBackground = true
+        window.isOpaque = false
+        window.backgroundColor = .clear
         window.isReleasedWhenClosed = false
         window.contentView = hostingView
         window.center()
@@ -184,11 +215,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         let hostingView = NSHostingView(
             rootView: OnboardingView(
-                title: "Settings",
+                title: "Rest Now",
                 subtitle: "Update your work and rest durations.",
                 primaryButtonTitle: "Save",
                 initialWorkSeconds: initialWork,
-                initialRestSeconds: initialRest
+                initialRestSeconds: initialRest,
+                showsProjectLink: true
             ) { [weak self] workDuration, restDuration in
                 guard let self else { return }
 
@@ -210,6 +242,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         window.title = "Settings"
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        window.styleMask.insert(.fullSizeContentView)
+        window.isMovableByWindowBackground = true
+        window.isOpaque = false
+        window.backgroundColor = .clear
         window.isReleasedWhenClosed = false
         window.contentView = hostingView
         window.center()

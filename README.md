@@ -7,9 +7,9 @@ A lightweight macOS menu bar app that reminds you to take breaks and rest your e
 ## Screenshots
 
 <div align="center">
-  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/ae2989f3-c83b-40a7-496a-73e0c1f7b900/public" alt="RestNow Settings" width="400">
-  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/956ebf8e-6846-4348-7dff-bd71c100d000/public" alt="RestNow Menu Bar" width="400">
-  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/31ace15e-f0d3-4b5a-6324-48cc550b5500/public" alt="RestNow Break Screen" width="600">
+  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/d4d01a08-efea-4d2e-9a2d-e3abbf70e200/public" alt="RestNow Settings" width="400">
+  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/10b02947-1b8a-4485-b0be-e7d2848f8c00/public" alt="RestNow Menu Bar" width="400">
+  <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/9731fa2e-df15-4a35-8751-7cb198414a00/public" alt="RestNow Break Screen" width="400">
 </div>
 
 ## Features

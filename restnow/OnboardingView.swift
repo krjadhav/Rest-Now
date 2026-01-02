@@ -1,15 +1,15 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    private let options: [Int] = [5, 10, 30, 60]
+    private let options: [Int] = [1, 5, 10, 20, 30, 60]
 
     private let title: String
     private let subtitle: String
     private let primaryButtonTitle: String
     private let showsProjectLink: Bool
 
-    @State private var selectedWorkSeconds: Int
-    @State private var selectedRestSeconds: Int
+    @State private var selectedWorkMinutes: Int
+    @State private var selectedRestMinutes: Int
 
     let onCommit: (_ workDuration: TimeInterval, _ restDuration: TimeInterval) -> Void
 
@@ -17,8 +17,8 @@ struct OnboardingView: View {
         title: String = "Rest Now",
         subtitle: String = "Choose your work and rest durations.",
         primaryButtonTitle: String = "Start",
-        initialWorkSeconds: Int = 30,
-        initialRestSeconds: Int = 10,
+        initialWorkMinutes: Int = 30,
+        initialRestMinutes: Int = 10,
         showsProjectLink: Bool = false,
         onCommit: @escaping (_ workDuration: TimeInterval, _ restDuration: TimeInterval) -> Void
     ) {
@@ -27,8 +27,8 @@ struct OnboardingView: View {
         self.primaryButtonTitle = primaryButtonTitle
         self.showsProjectLink = showsProjectLink
         self.onCommit = onCommit
-        _selectedWorkSeconds = State(initialValue: initialWorkSeconds)
-        _selectedRestSeconds = State(initialValue: initialRestSeconds)
+        _selectedWorkMinutes = State(initialValue: initialWorkMinutes)
+        _selectedRestMinutes = State(initialValue: initialRestMinutes)
     }
 
     var body: some View {
@@ -40,18 +40,18 @@ struct OnboardingView: View {
                 .foregroundStyle(.secondary)
 
             VStack(alignment: .leading, spacing: 10) {
-                Picker("Work Duration", selection: $selectedWorkSeconds) {
+                Picker("Work Duration", selection: $selectedWorkMinutes) {
                     ForEach(options, id: \.self) { value in
-                        Text("\(value)s").tag(value)
+                        Text("\(value)m").tag(value)
                     }
                 }
                 .pickerStyle(.segmented)
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                Picker("Rest Duration", selection: $selectedRestSeconds) {
+                Picker("Rest Duration", selection: $selectedRestMinutes) {
                     ForEach(options, id: \.self) { value in
-                        Text("\(value)s").tag(value)
+                        Text("\(value)m").tag(value)
                     }
                 }
                 .pickerStyle(.segmented)
@@ -74,7 +74,7 @@ struct OnboardingView: View {
                 Spacer()
 
                 Button(primaryButtonTitle) {
-                    onCommit(TimeInterval(selectedWorkSeconds), TimeInterval(selectedRestSeconds))
+                    onCommit(TimeInterval(selectedWorkMinutes * 60), TimeInterval(selectedRestMinutes * 60))
                 }
                 .keyboardShortcut(.defaultAction)
             }

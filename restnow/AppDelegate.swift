@@ -159,8 +159,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 title: "RestNow",
                 subtitle: "Choose your work and rest durations.",
                 primaryButtonTitle: "Start",
-                initialWorkSeconds: 30,
-                initialRestSeconds: 10
+                initialWorkMinutes: 30,
+                initialRestMinutes: 10
             ) { [weak self] workDuration, restDuration in
                 guard let self else { return }
 
@@ -218,8 +218,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 title: "Rest Now",
                 subtitle: "Update your work and rest durations.",
                 primaryButtonTitle: "Save",
-                initialWorkSeconds: initialWork,
-                initialRestSeconds: initialRest,
+                initialWorkMinutes: initialWork,
+                initialRestMinutes: initialRest,
                 showsProjectLink: true
             ) { [weak self] workDuration, restDuration in
                 guard let self else { return }

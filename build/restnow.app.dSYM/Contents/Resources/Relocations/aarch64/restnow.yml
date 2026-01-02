@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/kausthubjadhav/personal_apps/restnow/build/restnow.app/Contents/MacOS/restnow'
+relocations:     []
+...

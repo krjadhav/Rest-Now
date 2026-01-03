@@ -1,8 +1,8 @@
-# RestNow
+# Rest Now - Screen Break Timer
 
 A lightweight macOS menu bar app that reminds you to take breaks and rest your eyes during long work sessions.
 
-**Website:** [https://krjadhav.github.io/restnowapp/](https://krjadhav.github.io/restnowapp/)
+**Website:** [https://www.restnow.xyz/](https://www.restnow.xyz/)
 
 <div align="center">
   <img src="https://imagedelivery.net/j_zap_BNzPItCoMGioj9aA/d4d01a08-efea-4d2e-9a2d-e3abbf70e200/public" alt="RestNow Settings" width="600">
@@ -27,7 +27,7 @@ A lightweight macOS menu bar app that reminds you to take breaks and rest your e
 ### Homebrew (Recommended)
 
 ```bash
-brew tap krjadhav/restnow/restnow
+brew install --cask krjadhav/restnow/restnow
 ```
 
 ### Manual Installation
@@ -124,5 +124,3 @@ See the LICENSE file for details.
 ## Author
 
 Made by Kausthub Jadhav
-
-**Website:** [https://krjadhav.github.io/restnowapp/](https://krjadhav.github.io/restnowapp/)
